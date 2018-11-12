@@ -205,7 +205,6 @@
 
     }
 
-
     $('.tablelist tbody tr:odd').addClass('odd');
 </script>
 <script>

@@ -46,13 +46,14 @@
         <thead>
         <tr>
             <th>
-                <input onclick="selectAll()" type="checkbox" name="controlAll" style="" id="controlAll"></th>
+                <input onclick="selectAll()" type="checkbox" name="controlAll" style="" id="controlAll">
+                设置为医保药品
+            </th>
             <th> 药品品名 </th>
             <th> 剂型</th>
             <th> 规格</th>
             <th> 批准文号 </th>
             <th> 生产厂商 </th>
-            <th> 设置为医保药品 </th>
             <th> 选择报销比例 </th>
         </tr>
         </thead>
@@ -74,7 +75,7 @@
     $("#drugClassifications").change(function () {
         var drugClassifications = document.getElementById("drugClassifications").value;
         console.log(drugClassifications);
-        $.post("${pageContext.request.contextPath}/phamacy/selectDrugStore.action",
+        $.post("${pageContext.request.contextPath}/phamacy/selectDrugStoreMedicalInsurance.action",
             {"drugClassifications":drugClassifications},
             function (res) {
                 var pharmacyDrugTable = $("#pharmacyDrugTable");
@@ -86,11 +87,6 @@
                     <td>\${res.list[i].norm}</td>
                     <td>\${res.list[i].approvalnumber}</td>
                     <td>\${res.list[i].manufacturer}</td>
-                    <td><select name="medicalinsurance" id="medicalinsurance" style="width: 100px;height: 22px" >
-                         <option value='无' style='display:none;' >-请选择-</option>";
-                         <option value="0">是</option>
-                         <option value="1">否</option>
-                         </select></td>
                      <td><select name="reimbursementRatio" id="reimbursementRatio" style="width: 100px;height: 22px" >
                          <option value='无' style='display:none;' >-请选择-</option>";
                          <option value="0.30">0.30</option>

@@ -2,13 +2,12 @@ package com.cy.biz;
 
 import com.cy.bean.DrugStore;
 import com.cy.bean.DrugStoreOut;
-import com.cy.bean.PhamacyDrug;
+import com.cy.bean.Incompatility;
 import com.cy.bean.Purchase;
 import com.github.pagehelper.PageInfo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public interface DrugStorageService {
 
@@ -42,5 +41,13 @@ public interface DrugStorageService {
     public void drugStoreOutNoReviewPass(int drugStoreOutId);
     //通过审核减少库存
     public void reduceDrug(DrugStoreOut drugStoreOut);
+    //设置为医保药品
+    public void updateMedicalInsurance(DrugStore drugStore);
+    //通过药品分类查询药品
+    public PageInfo<DrugStore> selectDrugStoreMedicalInsurance(int drugClassificationId, String page, int size);
+    //查找药房药品名
+    public ArrayList<DrugStore> searchDrug();
+    //将药品插入配伍禁忌表中
+    public void Incompatility(Incompatility incompatility);
 
 }

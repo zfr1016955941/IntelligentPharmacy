@@ -33,11 +33,12 @@ public class DrugStore {
     private String drugPhoto;//药品图片存放路径
     private String dayConsumption;//每日用量
     private String drugClassificationName;//药品分类名字
+    private String  reimbursementRatio;//报销比例
 
     public DrugStore() {
     }
 
-    public DrugStore(int drugId, int drugClassificationId, int purchaseId, int drugStoreOutId, int drugNumber, String drugName, String drugDetails, String formulation, String norm, String unit, int drugPrice, int drugQuantity, String approvalnumber, String produtionDate, String lotNumber, String validaityperiod, String manufacturer, String drugIdState, int medicalinsurance, String storageTime, String drugPhoto,String dayConsumption,String drugClassificationName) {
+    public DrugStore(int drugId, int drugClassificationId, int purchaseId, int drugStoreOutId, int drugNumber, String drugName, String drugDetails, String formulation, String norm, String unit, int drugPrice, int drugQuantity, String approvalnumber, String produtionDate, String lotNumber, String validaityperiod, String manufacturer, String drugIdState, int medicalinsurance, String storageTime, String drugPhoto,String dayConsumption,String drugClassificationName,String  reimbursementRatio) {
         this.drugId = drugId;
         this.drugClassificationId = drugClassificationId;
         this.purchaseId = purchaseId;
@@ -61,6 +62,12 @@ public class DrugStore {
         this.drugPhoto = drugPhoto;
         this.dayConsumption=dayConsumption;
         this.drugClassificationName=drugClassificationName;
+        this.reimbursementRatio=reimbursementRatio;
+    }
+
+    public DrugStore(String reimbursementRatio,int drugId) {
+        this.reimbursementRatio=reimbursementRatio;
+        this.drugId = drugId;
     }
 
     public DrugStore( String drugName,int drugClassificationId, int drugNumber, String drugDetails, String formulation, String norm, String unit, int drugPrice, String approvalnumber, String produtionDate, String lotNumber, String validaityperiod, String manufacturer, String storageTime, String drugPhoto,String dayConsumption) {
@@ -90,6 +97,7 @@ public class DrugStore {
     public void setDrugClassificationName(String drugClassificationName) {
         this.drugClassificationName = drugClassificationName;
     }
+
 
     public int getDrugId() {
         return drugId;
@@ -239,8 +247,8 @@ public class DrugStore {
         return medicalinsurance;
     }
 
-    public void setMedicalinsurance(int medicalinsurance) {
-        this.medicalinsurance = medicalinsurance;
+    public void setMedicalinsurance(int medicalInsurance) {
+        this.medicalinsurance = medicalInsurance;
     }
 
     public String getStorageTime() {
@@ -261,5 +269,21 @@ public class DrugStore {
 
     public DrugStore(String dayConsumption) {
         this.dayConsumption = dayConsumption;
+    }
+
+    public String getDayConsumption() {
+        return dayConsumption;
+    }
+
+    public void setDayConsumption(String dayConsumption) {
+        this.dayConsumption = dayConsumption;
+    }
+
+    public String getReimbursementRatio() {
+        return reimbursementRatio;
+    }
+
+    public void setReimbursementRatio(String reimbursementRatio) {
+        this.reimbursementRatio = reimbursementRatio;
     }
 }

@@ -5,16 +5,13 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>智慧药房后台管理中心</title>
-    <link rel="stylesheet" type="text/css" href="../css/public.css" />
-    <script type="text/javascript" src="../js/jquery.min.js"></script>
-    <script type="text/javascript" src="../js/public.js"></script>
-    <script type="text/javascript" src="../js/external.js"></script>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/public.css" />
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/public.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/external.js"></script>
 
 </head>
-
 <body >
-<body>
-
 <!-- 头部 -->
 <div class="head">
     <div class="headL" >
@@ -28,7 +25,7 @@
         <a href="/alarm/alarmAllList.action?alarmRole=${adminList.adminRoleId}"   target="main">【查看报警消息】</a>
     </div>
     <div class="headR">
-        <a href="hlogin.jsp" target="_parent">【注销】</a>
+        <a href="cancellation.action" target="_parent">【注销】</a>
     </div>
     </c:forEach>
     </c:when>
@@ -47,15 +44,6 @@
         }
     </script>
 </div>
-
-</body>
-</html>
-
-
-</body>
-
-</html>
-<body>
 
 </body>
 </html>

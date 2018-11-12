@@ -56,7 +56,20 @@ public interface DrugStorageManage {
 
     //通过审核减少库存
     public void reduceDrug(DrugStoreOut drugStoreOut);
-    
+
+    //设置为医保药品
+    public void updateMedicalInsurance(DrugStore drugStore);
+
     //通过药品名查询药品
     public DrugStore selectDrug (DrugStoreOut drugStoreOut);
+
+    //通过药品分类查询药品
+    public ArrayList<DrugStore> selectDrugStoreMedicalInsurance(int drugClassificationId);
+
+    //查找药房药品名
+    public ArrayList<DrugStore> searchDrug();
+
+    //将药品插入配伍禁忌表中
+    public void Incompatility(Incompatility incompatility);
+
 }

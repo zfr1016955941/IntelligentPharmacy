@@ -6,9 +6,9 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title></title>
-    <link rel="stylesheet" type="text/css" href="../css/public.css">
-    <script type="text/javascript" src="../js/jquery.min.js"></script>
-    <script type="text/javascript" src="../js/public.js"></script>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/public.css">
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/public.js"></script>
     <head></head>
 
 
@@ -16,10 +16,9 @@
 </head>
 
 <body id="bg">
-
+<form action="#" method="post">
 <!-- 左边节点 -->
 <div class="container">
-
     <div class="leftsidebar_box">
         <a href="main.jsp" target="main">
             <div class="line">
@@ -51,7 +50,7 @@
         </dl>
                 </c:forEach>
     </div>
-
 </div>
+</form>
 </body>
 </html>

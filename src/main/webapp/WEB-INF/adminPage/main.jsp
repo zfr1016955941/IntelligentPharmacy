@@ -5,11 +5,11 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>首页</title>
-    <link rel="stylesheet" href="../css/style.css" media="all">
-    <link rel="stylesheet" type="text/css" href="../css/public.css" />
-    <script type="text/javascript" src="../js/jquery.min.js"></script>
-    <script type="text/javascript" src="../js/public.js"></script>
-    <script type="text/javascript" src="../js/external.js"></script>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css" media="all">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/public.css" />
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/public.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/external.js"></script>
     <style>
         /* 弹窗 (background) */
         .modal {

@@ -8,9 +8,9 @@
     <insert id="DrugPurchase"  parameterType="com.cy.bean.DrugStore">
 		insert into DRUGSTORE_TABLE(drugId,drugName,drugNumber,drugClassificationId,drugDetails
 		,formulation,norm,unit,drugPrice,approvalnumber,produtionDate,lotNumber,validaityperiod,
-		manufacturer,storageTime,drugPhoto,medicalinsurance,dayConsumption,drugQuantity,reimbursementRatio) values(DRUGID_SEQUENCE.NEXTVAL,#{drugName},#{drugClassificationId},#{drugNumber},
+		manufacturer,storageTime,drugPhoto,medicalinsurance,dayConsumption,drugQuantity,reimbursementRatio,drugIdState) values(DRUGID_SEQUENCE.NEXTVAL,#{drugName},#{drugClassificationId},#{drugNumber},
 		#{drugDetails},#{formulation},#{norm},#{unit},#{drugPrice},#{approvalnumber},#{produtionDate},#{lotNumber},#{validaityperiod}
-		,#{manufacturer},#{storageTime},#{drugPhoto},0,#{dayConsumption},0,1)
+		,#{manufacturer},#{storageTime},#{drugPhoto},1,#{dayConsumption},0,1,0)
 	</insert>
 
     <!--通过药品分类查询药品-->
@@ -117,5 +117,25 @@
 		update DRUGSTORE_TABLE set drugQuantity=drugQuantity - #{drugQuantity} where drugName=#{drugName}
     </update>
 
+	<!--退还厂家-->
+	<update id="updateMedicalInsurance" parameterType="com.cy.bean.DrugStore" >
+	    update DRUGSTORE_TABLE set medicalInsurance=0,reimbursementRatio=#{reimbursementRatio}
+		where drugId=#{drugId}
+	</update>
+
+	<!--选择分类后显示还未被纳入医保的药品-->
+	<select id="selectDrugStoreMedicalInsurance"  resultType="com.cy.bean.DrugStore">
+		select * from DRUGSTORE_TABLE where drugClassificationId =#{drugClassificationId} and medicalinsurance=1
+	</select>
+
+	<!--查找药品名-->
+	<select id="searchDrug"  resultType="com.cy.bean.DrugStore">
+		select * from DRUGSTORE_TABLE
+	</select>
+
+	<!--配伍禁忌添加-->
+	<insert id="Incompatility"  parameterType="com.cy.bean.Incompatility" >
+		insert into Incompatility_table values(Incompatility_SEQUENCE.NEXTVAL,#{pharmacyId},#{incompatilityDrug})
+	</insert>
 
 </mapper>

@@ -11,10 +11,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import sun.misc.BASE64Encoder;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -27,6 +30,7 @@ public class DrugStorageController  {
     private PhamacyService phamacyService;
     @Resource
     private DrugStorageService drugStorageServiceImp;
+    ArrayList<DrugStore> drugStoresList=null;
 
     //强制转换
     public static int toInt(String strNum ){
@@ -44,7 +48,7 @@ public class DrugStorageController  {
 
     //药品信息提交
     @RequestMapping("/submitDrugSetUp.action")
-    public String submitDrugSetUp(HttpServletRequest request){
+    public String submitDrugSetUp(HttpServletRequest request, MultipartFile pic) throws IOException {
         String drugName = request.getParameter("drugName");
         int drugNumber = toInt(request.getParameter("drugNumber"));
         int drugClass = toInt(request.getParameter("drugClass"));
@@ -59,8 +63,13 @@ public class DrugStorageController  {
         String validaiTypeRiod = request.getParameter("validaiTypeRiod");
         String manufacTurer = request.getParameter("manufacTurer");
         String storageTime = request.getParameter("storageTime");
-        String drugPhoto = request.getParameter("drugPhoto");
         String dayConsumption = request.getParameter("dayConsumption");
+        String drugPhoto=null;
+        if (!pic.isEmpty()) {
+            BASE64Encoder encoder = new BASE64Encoder();
+            //通过base64转码
+            drugPhoto = encoder.encode(pic.getBytes());
+        }
         DrugStore drugStore=new DrugStore(drugName,drugNumber,drugClass,drugDetailed,formUlarion,norm,unit,
                 drugPrice,approvalNumber,produtionDate,lotNumber,validaiTypeRiod,manufacTurer,storageTime,
                 drugPhoto,dayConsumption);
@@ -180,7 +189,7 @@ public class DrugStorageController  {
            submitDrugStore(request , drugQuantity,selected , outReason);
            return "forward:/phamacy/selectPhamacyReceive.action";
        }else{
-           submitDrugStore(request , drugQuantity,selected , outReason); 
+           submitDrugStore(request , drugQuantity,selected , outReason);
            return "forward:/phamacy/selectDrugStoreOut.action";
        }
     }
@@ -198,6 +207,7 @@ public class DrugStorageController  {
                     a++;
                 }
             }
+
             for(int i=0;i<selected.length;i++){
                 if(selected[i]!=""){
                     DrugStoreOut drugStoreOut= new DrugStoreOut();
@@ -299,30 +309,60 @@ public class DrugStorageController  {
         return "/pharmacyPage/medicalInsuranceDrug";
     }
 
+    //选择分类后显示还未被纳入医保的药品
+    @RequestMapping(value = "selectDrugStoreMedicalInsurance.action",method=RequestMethod.POST, produces="application/json;charset=utf-8")
+    public  @ResponseBody PageInfo<DrugStore> selectDrugStoreMedicalInsurance(String drugClassifications, String num){
+        PageInfo<DrugStore> drugStoreList=new PageInfo<DrugStore>();
+        if(!StringUtils.isEmpty(drugClassifications)){
+            drugStoreList=drugStorageServiceImp.selectDrugStoreMedicalInsurance(toInt(drugClassifications),num,3);
+        }
+        return drugStoreList;
+    }
+
     //医保设置提交
     @RequestMapping("submitMedicalInsurance.action")
-    public String submitMedicalInsurance(HttpServletRequest request ,String[] medicalinsurance,String[] selected ,String[] reimbursementRatio){
+    public String submitMedicalInsurance(HttpServletRequest request ,String[] selected ,String[] reimbursementRatio){
         List<DrugStoreOut> drugStoreOutList = new ArrayList<DrugStoreOut>();
-        String [] medicalinsuranceNum = new String[10];
         String [] reimbursementRatioNum = new String[10];
-        if(medicalinsurance!=null||selected!=null||reimbursementRatio!=null){
+        if(selected!=null||reimbursementRatio!=null){
             int a=0;
-            for(int j=0;j<medicalinsurance.length;j++) {
-                if (medicalinsurance[j] != "") {
-                    medicalinsuranceNum[a] = medicalinsurance[j];
+            for(int j=0;j<reimbursementRatio.length;j++) {
+                if (reimbursementRatio[j] != "") {
                     reimbursementRatioNum[a] = reimbursementRatio[j];
                     a++;
                 }
             }
             for(int i=0;i<selected.length;i++){
                 if(selected[i]!=""){
-                    System.out.println("医保："+ medicalinsuranceNum[i]);
-                    System.out.println("报销比例："+ reimbursementRatioNum[i]);
+                    DrugStore drug = new DrugStore(reimbursementRatioNum[i],toInt(selected[i]));
+                    drugStorageServiceImp.updateMedicalInsurance(drug);
                 }
             }
         }
-        int result= drugStorageServiceImp.drugStoreOut(drugStoreOutList);
-        return "forward:/phamacy/selectDrugStoreOut.action";
+        return "/pharmacyPage/medicalInsuranceSuccessful";
+    }
+
+    //配置禁忌页面
+    @RequestMapping("incompatibility.action")
+    public String incompatibility(){
+        return "/pharmacyPage/incompatibility";
+    }
+
+    //查询药品名
+    @RequestMapping(value="/searchDrug.action")
+    public @ResponseBody ArrayList<DrugStore> searchDrug()  {
+        drugStoresList=drugStorageServiceImp.searchDrug();
+        return drugStoresList;
+    }
+
+    //配伍禁忌提交
+    @RequestMapping("submitIncompatibilityDrug.action")
+    public String submitIncompatibilityDrug(HttpServletRequest request){
+        int searchFirstDrug = toInt(request.getParameter("searchFirstDrug"));
+        String searchSendDrug = request.getParameter("searchSendDrug");
+        Incompatility incompatility =new Incompatility(searchFirstDrug,searchSendDrug);
+        drugStorageServiceImp.Incompatility(incompatility);
+        return "";
     }
 
 }

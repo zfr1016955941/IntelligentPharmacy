@@ -30,7 +30,7 @@
 </div>
 
 <form method="post">
-    <input type="hidden" name="num">
+    <input type="hidden" id="num" name="num" >
     <table class="tablelist" lay-filter="demo">
         <thead>
         <tr>
