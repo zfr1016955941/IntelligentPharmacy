@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class DrugStorageServiceImp implements DrugStorageService{
@@ -125,7 +124,6 @@ public class DrugStorageServiceImp implements DrugStorageService{
     @Override
     public void reduceDrug(DrugStoreOut drugStoreOut) {
         drugStorageManage.reduceDrug(drugStoreOut);
-
         if(drugStoreOut.getOutReason().contains("申领")) {
             DrugStore drugStore = drugStorageManage.selectDrug(drugStoreOut);
             drugStore.setDrugQuantity(drugStoreOut.getDrugQuantity());
@@ -140,7 +138,37 @@ public class DrugStorageServiceImp implements DrugStorageService{
                 phamacyDrugManager.addPharmacyDrugs(drugStore);
             }
         }
-       
+
+    }
+
+    @Override
+    public void updateMedicalInsurance(DrugStore drugStore) {
+        drugStorageManage.updateMedicalInsurance(drugStore);
+    }
+
+    @Override
+    public PageInfo<DrugStore> selectDrugStoreMedicalInsurance(int drugClassificationId, String page, int size) {
+        int page1=0;
+        if(StringUtils.isEmpty(page)){
+            page1 = Integer.parseInt(page="1");
+        }else{
+            page1 = Integer.parseInt(page);
+        }
+        //selectByUsers调用的是前面没分页的方法
+        PageHelper.startPage(page1,size);
+        ArrayList<DrugStore> phamacyReceiveListPageInfo = drugStorageManage.selectDrugStoreMedicalInsurance(drugClassificationId);
+        PageInfo<DrugStore> phamacyDrugs = new PageInfo<DrugStore>(phamacyReceiveListPageInfo);
+        return phamacyDrugs;
+    }
+
+    @Override
+    public ArrayList<DrugStore> searchDrug() {
+        return drugStorageManage.searchDrug();
+    }
+
+    @Override
+    public void Incompatility(Incompatility incompatility) {
+        drugStorageManage.Incompatility(incompatility);
     }
 
 

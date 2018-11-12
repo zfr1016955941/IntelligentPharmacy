@@ -12,7 +12,7 @@
 <html xmlns:c="http://www.w3.org/1999/XSL/Transform">
 <head>
     <meta charset="utf-8">
-    <title>药库退还厂家单</title>
+    <title>出库审核</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -25,12 +25,12 @@
 </head>
 <body>
 <div class="x-nav"> <span class="layui-breadcrumb"> <a><cite>首页</cite></a>
-    <a><cite>退还厂家单</cite></a> </span>
+    <a><cite>出库审核</cite></a> </span>
     <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"  href="javascript:location.replace(location.href);" title="刷新"><i class="layui-icon" style="line-height:30px">ဂ</i></a>
 </div>
 
 <form method="post">
-    <input type="hidden" name="num">
+    <input type="hidden" id="num" name="num" >
     <table class="tablelist" lay-filter="demo">
         <thead>
         <tr>
