@@ -366,7 +366,7 @@ public class DrugStorageController  {
         String searchSendDrug = request.getParameter("searchSendDrug");
         Incompatility incompatility =new Incompatility(searchFirstDrug,searchSendDrug);
         drugStorageServiceImp.Incompatility(incompatility);
-        return "";
+        return "/pharmacyPage/medicalInsuranceSuccessful";
     }
     @RequestMapping("/batchList")//按种类批次统计,默认显示当天入库品种1为全部药品,2为种类,3为批号,4为详情
     public void batchList(HttpServletRequest request, HttpServletResponse response, DrugStore drugStore, String conditionQuery) throws ServletException, IOException {

@@ -130,21 +130,27 @@ public class DrugStore {
         this.inCount = inCount;
     }
 
-    public DrugStore(String drugName, int drugNumber, int drugClass, String drugDetailed, String formUlarion, String norm, String unit, int drugPrice, String approvalNumber, String produtionDate, String lotNumber, String validaiTypeRiod, String manufacTurer, String storageTime, String drugPhoto, String dayConsumption) {
 
-        this.drugNumber = drugNumber;
+    public DrugStore( String drugName,int drugClassificationId, int drugNumber, String drugDetails, String formulation, String norm, String unit, int drugPrice, String approvalnumber, String produtionDate, String lotNumber, String validaityperiod, String manufacturer, String storageTime, String drugPhoto,String dayConsumption) {
+
         this.drugName = drugName;
+        this.drugClassificationId = drugClassificationId;
+        this.drugNumber = drugNumber;
+        this.drugDetails = drugDetails;
+        this.formulation = formulation;
         this.norm = norm;
         this.unit = unit;
         this.drugPrice = drugPrice;
+        this.approvalnumber = approvalnumber;
         this.produtionDate = produtionDate;
         this.lotNumber = lotNumber;
-
+        this.validaityperiod = validaityperiod;
+        this.manufacturer = manufacturer;
         this.storageTime = storageTime;
         this.drugPhoto = drugPhoto;
-        this.dayConsumption = dayConsumption;
-
+        this.dayConsumption=dayConsumption;
     }
+
 
     public int getDrugId() {
         return drugId;

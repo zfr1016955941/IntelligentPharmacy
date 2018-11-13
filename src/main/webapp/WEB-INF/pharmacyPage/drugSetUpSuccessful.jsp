@@ -23,7 +23,8 @@
 </head>
 <body>
 <div style="line-height:350px;text-align:center">
-    <span><img src="../images/wc.png" style="height:200px; weight:300px;"/>药品信息设置成功</span>
+    <span><img src="../images/wc.png" style="height:200px; weight:300px;"/>药品信息设置成功</span><br/>
+    <h1 style="height:40px; weight:300px;"><a class="layui-btn layui-btn-small" href="/phamacy/drugSetUp.action" >返回</a></h1>
 </div>
 </body>
 <script>
