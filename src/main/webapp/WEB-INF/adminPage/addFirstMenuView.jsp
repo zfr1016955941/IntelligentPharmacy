@@ -46,7 +46,7 @@
         var t=confirm("确定要提交？");
         var firstName=document.getElementById("firstName").value;
         if(t==true){
-            location.href="submitFirstMenu.action?firstName="+firstName;
+            location.href="${pageContext.request.contextPath}/adminPag/submitFirstMenu.action?firstName="+firstName;
             layer.msg('提交成功!',{icon: 6,time:2000});
             layer.closeAll(layer.index);
             window.parent.location.reload();
@@ -56,8 +56,7 @@
 
 
     }
-
-
+    
 </script>
 </body>
 </html>

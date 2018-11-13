@@ -5,7 +5,7 @@ import com.cy.biz.DrugStorageService;
 import com.cy.biz.PhamacyService;
 import com.cy.util.StringUtils;
 import com.github.pagehelper.PageInfo;
-import org.apache.tools.ant.taskdefs.condition.Http;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 import sun.misc.BASE64Encoder;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -31,6 +33,8 @@ public class DrugStorageController  {
     @Resource
     private DrugStorageService drugStorageServiceImp;
     ArrayList<DrugStore> drugStoresList=null;
+    Gson gson = new Gson();
+    int state ;//药品详情
 
     //强制转换
     public static int toInt(String strNum ){
@@ -363,6 +367,262 @@ public class DrugStorageController  {
         Incompatility incompatility =new Incompatility(searchFirstDrug,searchSendDrug);
         drugStorageServiceImp.Incompatility(incompatility);
         return "";
+    }
+    @RequestMapping("/batchList")//按种类批次统计,默认显示当天入库品种1为全部药品,2为种类,3为批号,4为详情
+    public void batchList(HttpServletRequest request, HttpServletResponse response, DrugStore drugStore, String conditionQuery) throws ServletException, IOException {
+        state = drugStore.getState();
+        PageInfo pageDrug;
+        response.setCharacterEncoding("UTF-8");
+        Map<String, Object> map = new HashMap<String, Object>();
+        List<DrugStore> drugList;
+        List<DrugStoreOutTable>drugStoreOutTableList;
+        int[] outDrug;//出库数量
+        int[]inDrug;//入库数量
+        int[]outMoney;//出库金额
+        int[]inMoney;//入库金额
+        String []batch;//批次
+        String []drugMonth;//月份
+        if (state>0) {
+            if(state==5){//画出本年度的柱状图详情
+                System.out.println(drugStore.getDrugName());
+                drugList= drugStorageServiceImp.findAllDrugStoreYearDetails(drugStore.getDrugName());
+                inDrug=new int[drugList.size()];
+                outDrug=new int[drugList.size()];
+                outMoney=new int[drugList.size()];
+                inMoney=new int[drugList.size()];
+                batch=new String[drugList.size()];
+                drugMonth=new String[drugList.size()];
+                for(int i=0;i<drugList.size();i++){
+                    outDrug[i]=drugList.get(i).getOutCount();
+                    inDrug[i]=drugList.get(i).getInCount();
+                    outMoney[i]=drugList.get(i).getDrugPrice()*drugList.get(i).getOutCount();
+                    inMoney[i]=drugList.get(i).getDrugPrice()*drugList.get(i).getInCount();
+                    batch[i]=drugList.get(i).getLotNumber();
+                    drugMonth[i]=""+drugList.get(i).getStorageTime()+"月";
+                }
+                map.put("outDrug",outDrug);
+                map.put("inDrug",inDrug);
+                //map.put("outMoney",outMoney);
+                //map.put("inMoney",inMoney);
+                map.put("batch",batch);
+                map.put("dataDrugMonth",drugMonth);
+                String jsonStr = gson.toJson(map);
+                System.out.println(jsonStr);
+                response.getWriter().write(jsonStr);
+
+            }else if(state==4){
+                String drugName=request.getParameter("drugName");
+                request.setAttribute("drugName",drugName);
+                request.getRequestDispatcher("/WEB-INF/pharmacyPage/drugDetails.jsp").forward(request, response);
+            }else if(state==6){
+                drugList= drugStorageServiceImp.findAllDrugStoreWeekOutDetails(drugStore.getDrugName());
+                inDrug=new int[drugList.size()];
+                outDrug=new int[drugList.size()];
+                outMoney=new int[drugList.size()];
+                inMoney=new int[drugList.size()];
+                batch=new String[drugList.size()];
+                drugMonth=new String[drugList.size()];
+                for(int i=0;i<drugList.size();i++){
+                    outDrug[i]=drugList.get(i).getOutCount();
+                    inDrug[i]=drugList.get(i).getInCount();
+                    outMoney[i]=drugList.get(i).getDrugPrice()*drugList.get(i).getOutCount();
+                    inMoney[i]=drugList.get(i).getDrugPrice()*drugList.get(i).getInCount();
+                    batch[i]=drugList.get(i).getLotNumber();
+                    drugMonth[i]=""+drugList.get(i).getStorageTime()+"";
+                }
+                map.put("outDrug",outDrug);
+                map.put("inDrug",inDrug);
+                //map.put("outMoney",outMoney);
+                //map.put("inMoney",inMoney);
+                map.put("batch",batch);
+                map.put("dataDrugMonth",drugMonth);
+                String jsonStr = gson.toJson(map);
+                System.out.println(jsonStr);
+                response.getWriter().write(jsonStr);
+            }else if(state==7){
+                drugList= drugStorageServiceImp.findAllDrugStoreMouthOutDetails(drugStore.getDrugName());
+                inDrug=new int[drugList.size()];
+                outDrug=new int[drugList.size()];
+                outMoney=new int[drugList.size()];
+                inMoney=new int[drugList.size()];
+                batch=new String[drugList.size()];
+                drugMonth=new String[drugList.size()];
+                for(int i=0;i<drugList.size();i++){
+                    outDrug[i]=drugList.get(i).getOutCount();
+                    inDrug[i]=drugList.get(i).getInCount();
+                    outMoney[i]=drugList.get(i).getDrugPrice()*drugList.get(i).getOutCount();
+                    inMoney[i]=drugList.get(i).getDrugPrice()*drugList.get(i).getInCount();
+                    batch[i]=drugList.get(i).getLotNumber();
+                    drugMonth[i]=""+drugList.get(i).getStorageTime()+"周";
+                }
+                map.put("outDrug",outDrug);
+                map.put("inDrug",inDrug);
+                //map.put("outMoney",outMoney);
+                //map.put("inMoney",inMoney);
+                map.put("batch",batch);
+                map.put("dataDrugMonth",drugMonth);
+                String jsonStr = gson.toJson(map);
+                System.out.println(jsonStr);
+                response.getWriter().write(jsonStr);
+            }else if(state==8){
+                drugList= drugStorageServiceImp.findAllDrugStoreMouthInDetails(drugStore.getDrugName());
+                inDrug=new int[drugList.size()];
+                outDrug=new int[drugList.size()];
+                outMoney=new int[drugList.size()];
+                inMoney=new int[drugList.size()];
+                batch=new String[drugList.size()];
+                drugMonth=new String[drugList.size()];
+                for(int i=0;i<drugList.size();i++){
+                    //outDrug[i]=drugList.get(i).getOutCount();
+                    inDrug[i]=drugList.get(i).getInCount();
+                    outMoney[i]=drugList.get(i).getDrugPrice()*drugList.get(i).getOutCount();
+                    inMoney[i]=drugList.get(i).getDrugPrice()*drugList.get(i).getInCount();
+                    batch[i]=drugList.get(i).getLotNumber();
+                    drugMonth[i]=""+drugList.get(i).getStorageTime()+"月";
+                }
+                map.put("outDrug",outDrug);
+                map.put("inDrug",inDrug);
+                //map.put("outMoney",outMoney);
+                //map.put("inMoney",inMoney);
+                map.put("batch",batch);
+                map.put("dataDrugMonth",drugMonth);
+                String jsonStr = gson.toJson(map);
+                System.out.println(jsonStr);
+                response.getWriter().write(jsonStr);
+
+            }else if(state==9){
+                drugList= drugStorageServiceImp.findAllDrugStoreMouthInDetails(drugStore.getDrugName());
+                inDrug=new int[drugList.size()];
+                outDrug=new int[drugList.size()];
+                outMoney=new int[drugList.size()];
+                inMoney=new int[drugList.size()];
+                batch=new String[drugList.size()];
+                drugMonth=new String[drugList.size()];
+                for(int i=0;i<drugList.size();i++){
+                    // outDrug[i]=drugList.get(i).getOutCount();
+                    inDrug[i]=drugList.get(i).getInCount();
+                    outMoney[i]=drugList.get(i).getDrugPrice()*drugList.get(i).getOutCount();
+                    inMoney[i]=drugList.get(i).getDrugPrice()*drugList.get(i).getInCount();
+                    batch[i]=drugList.get(i).getLotNumber();
+                    drugMonth[i]=""+drugList.get(i).getStorageTime()+"周";
+                }
+                map.put("outDrug",outDrug);
+                map.put("inDrug",inDrug);
+                //map.put("outMoney",outMoney);
+                //map.put("inMoney",inMoney);
+                map.put("batch",batch);
+                map.put("dataDrugMonth",drugMonth);
+                String jsonStr = gson.toJson(map);
+                System.out.println(jsonStr);
+                response.getWriter().write(jsonStr);
+
+            }else if(state==10){
+                System.out.println("ooo"+drugStore.getDrugName());
+                drugList= drugStorageServiceImp.findAllDrugStoreMouthInDetails(drugStore.getDrugName());
+                inDrug=new int[drugList.size()];
+                outDrug=new int[drugList.size()];
+                outMoney=new int[drugList.size()];
+                inMoney=new int[drugList.size()];
+                batch=new String[drugList.size()];
+                drugMonth=new String[drugList.size()];
+                for(int i=0;i<drugList.size();i++){
+                    // outDrug[i]=drugList.get(i).getOutCount();
+                    inDrug[i]=drugList.get(i).getInCount();
+                    outMoney[i]=drugList.get(i).getDrugPrice()*drugList.get(i).getOutCount();
+                    inMoney[i]=drugList.get(i).getDrugPrice()*drugList.get(i).getInCount();
+                    batch[i]=drugList.get(i).getLotNumber();
+                    drugMonth[i]=""+drugList.get(i).getStorageTime()+"";
+                }
+                map.put("outDrug",outDrug);
+                map.put("inDrug",inDrug);
+                //map.put("outMoney",outMoney);
+                //map.put("inMoney",inMoney);
+                map.put("batch",batch);
+                map.put("dataDrugMonth",drugMonth);
+                String jsonStr = gson.toJson(map);
+                System.out.println(jsonStr);
+                response.getWriter().write(jsonStr);
+
+            }else if(state==11){
+                String drugName=request.getParameter("drugName");
+                request.setAttribute("drugName",drugName);
+                request.getRequestDispatcher("/WEB-INF/pharmacyPage/inDrugDetails.jsp").forward(request, response);
+            }
+
+            else {
+                int pagesize = Integer.parseInt(request.getParameter("limit"));
+                int pageNum = Integer.parseInt(request.getParameter("page"));
+                map.put("code", 0);
+                map.put("msg", "");
+                if (state == 1) {
+                    pageDrug = drugStorageServiceImp.findAllDrugStore(pageNum, pagesize);
+                    drugList = pageDrug.getList();
+                    map.put("count", pageDrug.getTotal());
+                    map.put("data", drugList);
+                    String jsonStr = gson.toJson(map);
+                    response.getWriter().write(jsonStr);
+                } else if (state == 2) {//入库明细查询
+                    pageDrug = drugStorageServiceImp.findAllBatchDrugStore(pageNum, pagesize);
+                    drugList = pageDrug.getList();
+                    map.put("count", pageDrug.getTotal());
+                    map.put("data", drugList);
+                    String jsonStr = gson.toJson(map);
+                    response.getWriter().write(jsonStr);
+                } else if (state == 3) {//出库查询
+                    pageDrug = drugStorageServiceImp.findAllSortDrugStore(pageNum, pagesize);
+                    drugStoreOutTableList = pageDrug.getList();
+                    map.put("count", pageDrug.getTotal());
+                    map.put("data", drugStoreOutTableList);
+                    String jsonStr = gson.toJson(map);
+                    response.getWriter().write(jsonStr);
+
+                }else if(state==12){
+                    pageDrug = drugStorageServiceImp.findAllConditonDrugStore(pageNum, pagesize,conditionQuery);
+                    drugList = pageDrug.getList();
+                    map.put("count", pageDrug.getTotal());
+                    map.put("data", drugList);
+                    String jsonStr = gson.toJson(map);
+                    response.getWriter().write(jsonStr);
+                }
+
+            }
+        } else {
+            List<DrugClassification> drugClassification = drugStorageServiceImp.findAllKindDrugStore();
+            request.setAttribute("drugStoreList", drugClassification);
+            request.getRequestDispatcher("/WEB-INF/pharmacyPage/detailedListDrugs.jsp").forward(request, response);
+        }
+
+    }
+
+    @RequestMapping("/purchase")
+    @ResponseBody
+    public Map purchase(HttpServletRequest request,HttpServletResponse response,Integer state,String conditionQuery) throws ServletException, IOException {
+        PageInfo pageDrug;
+        Map<String, Object> map = new HashMap<String, Object>();
+        List<DrugStore> drugList;
+        if(state==null){
+            request.getRequestDispatcher("/WEB-INF/pharmacyPage/purchaseDetails.jsp").forward(request, response);
+        }else {
+            int pagesize = Integer.parseInt(request.getParameter("limit"));
+            int pageNum = Integer.parseInt(request.getParameter("page"));
+            map.put("code", 0);
+            map.put("msg", "");
+            if (state == 1) {
+                pageDrug = drugStorageServiceImp.findPurchase(pageNum, pagesize);
+                drugList = pageDrug.getList();
+                map.put("count", pageDrug.getTotal());
+                map.put("data", drugList);
+                return map;
+            } else if (state == 2) {
+                pageDrug = drugStorageServiceImp.findConditionPurchase(pageNum, pagesize, conditionQuery);
+                drugList = pageDrug.getList();
+                map.put("count", pageDrug.getTotal());
+                map.put("data", drugList);
+                return map;
+            }
+        }
+        return null;
+
     }
 
 }

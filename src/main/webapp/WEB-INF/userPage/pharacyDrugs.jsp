@@ -12,7 +12,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="author" content="order by dede58.com"/>
-    <title>小米手机列表</title>
+    <title>药品商城</title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/user/style.css">
 </head>
 <body>
@@ -63,12 +63,9 @@
     <a href=""><div class="ad_top fl"></div></a>
     <div class="nav fl">
         <ul>
-            <li><a href="">抗生素</a></li>
-            <li><a href="">心脑血管用药</a></li>
-            <li><a href="">消化系统用药</a></li>
-            <li><a href="">呼吸系统用药</a></li>
-            <li><a href="">麻醉类药品</a></li>
-            <li><a href="">精神类药品</a></li>
+            <c:forEach items="${requestScope.drugClassification}" var="drugClassificationTemp"  >
+            <li><a href="${pageContext.request.contextPath}/userPage/selectPhamacyDrugDetils.action?receiverId=${drugClassificationTemp.drugClassificationId}">${drugClassificationTemp.drugClassificationName}</a></li>
+            </c:forEach>
         </ul>
     </div>
     <div class="search fr">

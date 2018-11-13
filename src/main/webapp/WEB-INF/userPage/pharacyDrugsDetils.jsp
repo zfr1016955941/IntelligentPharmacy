@@ -90,17 +90,21 @@
 <!-- xiangqing -->
 <form action="post" method="">
     <div class="jieshao mt20 w">
-        <div class="left fl"><img src="${pageContext.request.contextPath}/userPage/selectPhamacyDrugDetils.action?receiverId=${phamacyDrug.pharmacyId}"></div>
+        <div class="left fl"><img src="${pageContext.request.contextPath}/userPage/images.action?receiverId=${phamacyDrug.pharmacyId}" width="400" height="500"></div>
         <div class="right fr">
             <div class="h3 ml20 mt20">${phamacyDrug.drugName}</div>
             <div class="jianjie mr40 ml20 mt10">${phamacyDrug.drugDetails}</div>
-            <div class="jiage ml20 mt10">${phamacyDrug.drugPrice}.00元</div>
+            <div class="jianjie mr40 ml20 mt10">剂型：${phamacyDrug.formulation}</div>
+            <div class="jianjie mr40 ml20 mt10">规格：${phamacyDrug.norm}</div>
+            <div class="jianjie mr40 ml20 mt10">批准文号：${phamacyDrug.approvalnumber}</div>
+            <div class="jianjie mr40 ml20 mt10">生产产商：${phamacyDrug.manufacturer}</div>
+            <div class="jiage ml20 mt10">单价：￥${phamacyDrug.drugPrice}.00元</div>
             <div class="xqxq mt20 ml20">
                 <div class="bot mt20 ft20 ftbc">总计：${phamacyDrug.drugPrice}元</div>
             </div>
             <div class="xiadan ml20 mt20">
                 <input class="jrgwc"  type="button" name="jrgwc" value="立即选购" />
-                <input class="jrgwc" type="button" name="jrgwc" value="加入购物车" />
+                <input class="jrgwc" type="button" name="jrgwc" value="加入购物车"  />
 
             </div>
         </div>

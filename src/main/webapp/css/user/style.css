@@ -152,7 +152,7 @@ header .top .right .gouwuche:hover{color:#000;background: #666;}
 .xiangqing .neirong nav li a:hover{color:#ff6700;}
 /*jieshao*/
 .jieshao{height: 560px; }
-.jieshao .left{width:560px;height:560px;border:1px solid #ccc;}
+.jieshao .left{width:500px;height:500px;border:1px solid #ccc;}
 .jieshao .right{width:620px;background: rgb(248,248,248);height: 600px;}
 .jieshao .right .jianjie{font-size: 14px;color: rgb(176,176,176);line-height: 20px;}
 .jieshao .right .jiage{font-size: 18px;color:#ff6700;font-weight: bold;}

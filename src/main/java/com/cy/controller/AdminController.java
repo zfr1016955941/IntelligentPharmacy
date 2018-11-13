@@ -1,10 +1,10 @@
 package com.cy.controller;
 
-import com.cy.bean.Admin;
-import com.cy.bean.FirstMenu;
-import com.cy.bean.SecondMenu;
+import com.cy.bean.*;
 import com.cy.biz.AdminService;
 import com.cy.biz.MenuService;
+import com.github.pagehelper.PageInfo;
+import com.google.gson.Gson;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +25,7 @@ import java.util.*;
 @RequestMapping("/adminPage")
 public class AdminController {
 
-    HttpSession session=null;
+    HttpSession session;
     @Resource
     private AdminService adminServiceImpl;
     private ArrayList<Admin> adminList=null;
@@ -39,7 +39,15 @@ public class AdminController {
     private Admin admin;
     public static String adminName=null;
 
-
+    Gson gson=new Gson();
+    //权限分配的返回map
+    Map<String,Object>allMenuMap=new HashMap<String, Object>() ;
+    //    //权限分配一级菜单列表
+//    private List<FirstMenu> firstMenuAutho=new List<FirstMenu>();
+    //权限分配二级菜单
+    private List<SecondMenu> secondMenuAutho=new ArrayList<SecondMenu>();
+    Map<String,Object>addUserMap =new HashMap<String,Object>();
+    Map<String,Object>checkName =new HashMap<String,Object>();
     //强制转换
     public static int toInt(String strNum ){
         Integer integer = new Integer(strNum);
@@ -51,13 +59,13 @@ public class AdminController {
     public String Login(Model model, Admin admin, HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
         String sessionCode = (String)session.getAttribute("code");
         String code=request.getParameter("code");
-        System.out.print(admin.getAdminName());
-        System.out.print(admin.getPassword());
+        System.out.println(admin.getAdminName());
+        System.out.println(admin.getPassword());
         if (code.equalsIgnoreCase(sessionCode)) {
             Admin adminResult = adminServiceImpl.login(admin);
             if (adminResult != null) {
                 adminName=admin.getAdminName();
-                session = request.getSession();
+                HttpSession session = request.getSession();
                 session.setAttribute("adminList",adminResult);
                 session =request.getSession();
                 //通过用户名查找角色ID
@@ -65,6 +73,7 @@ public class AdminController {
                 //清空菜单栏
                 secondMenuList=null;
                 ArrayList<FirstMenu> AllfirstMenuList=new ArrayList<FirstMenu>();
+
                 //二级菜单加载
                 secondMenuList= (ArrayList<SecondMenu>) menuServiceImp.findadmin(adminRoleId);
                 //一级菜单加载
@@ -81,7 +90,8 @@ public class AdminController {
                     firstMenuList= (ArrayList<FirstMenu>) menuServiceImp.findadminFirst(firstId.get(j));
                     AllfirstMenuList.addAll(firstMenuList);
                 }
-                session.setAttribute("firstMenuList",AllfirstMenuList);
+                session.setAttribute("first" +
+                        "MenuList",AllfirstMenuList);
                 session.setAttribute("secondMenuList",secondMenuList);
                 model.addAttribute("admin", adminResult);
                 session.setAttribute("admin", adminResult);
@@ -94,6 +104,8 @@ public class AdminController {
         } else {
             return "redirect:/login.jsp";
         }
+
+
     }
     //主页左边界面显示
     @RequestMapping("/adminLeft.action")
@@ -231,20 +243,20 @@ public class AdminController {
     }
 
     //一级菜单添加页面
-    @RequestMapping("/addFirstMenuView.action")
+    @RequestMapping("addFirstMenuView.action")
     public String addFirstMenuView(){
         return "/adminPage/addFirstMenuView";
     }
 
     //一级菜单添加提交
-    @RequestMapping("/submitFirstMenu.action")
+    @RequestMapping("submitFirstMenu.action")
     public String submitFirstMenu(HttpServletRequest request,String firstName){
         menuServiceImp.addFirstMenu(firstName);
         return "/adminPage/menuManage";
     }
 
     //一级菜单删除
-    @RequestMapping("/firstMenuDelete.action")
+    @RequestMapping("firstMenuDelete.action")
     public String firstMenuDelete(HttpServletRequest request,String firstMenuName,int firstMenuId){
         menuServiceImp.firstMenuDelete(firstMenuName);
         //一级菜单下的子菜单一起删除
@@ -256,7 +268,7 @@ public class AdminController {
     }
 
     //一级菜单编辑页面
-    @RequestMapping("/editFirstMenuView.action")
+    @RequestMapping("editFirstMenuView.action")
     public String editFirstMenuView(HttpServletRequest request){
         firstMenu= (ArrayList<FirstMenu>) menuServiceImp.findAllFirst();
         request.setAttribute("firstMenu",firstMenu);
@@ -265,7 +277,7 @@ public class AdminController {
 
     private  int ufirstMenuId=0;
     //一级菜单修改
-    @RequestMapping("/editFirstMenu.action")
+    @RequestMapping("editFirstMenu.action")
     public String editFirstMenu(HttpServletRequest request,String firstMenuName,int firstMenuId){
         ufirstMenuId=firstMenuId;
         request.setAttribute("firstMenuName",firstMenuName);
@@ -273,7 +285,7 @@ public class AdminController {
     }
 
     //一级菜单修改提交(有BUG)
-    @RequestMapping("/updateFirstMenu.action")
+    @RequestMapping("updateFirstMenu.action")
     public String updateFirstMenu(HttpServletRequest request){
         System.out.println("id："+ufirstMenuId);
         String firstMenuName = request.getParameter("firstMenuName");
@@ -285,13 +297,13 @@ public class AdminController {
     }
 
     //二级菜单添加页面
-    @RequestMapping("/addSecondMenuView.action")
+    @RequestMapping("addSecondMenuView.action")
     public String addSecondMenuView(){
         return "adminPage/addSecondMenuView";
     }
 
     //二级菜单添加提交
-    @RequestMapping("/submitSecondMenu.action")
+    @RequestMapping("submitSecondMenu.action")
     public String submitSecondMenu(HttpServletRequest request,String secondName,String searchFirstMenu){
         int firstMenuId =menuServiceImp.firstMenuId(searchFirstMenu);
         SecondMenu secondMenu = new SecondMenu(secondName,firstMenuId);
@@ -300,26 +312,170 @@ public class AdminController {
     }
 
     //二级菜单删除
-    @RequestMapping("/secondMenuDetele.action")
+    @RequestMapping("secondMenuDetele.action")
     public String secondMenuDetele(HttpServletRequest request,String searchSendMenu){
         menuServiceImp.secondMenuDelete(searchSendMenu);
         return "adminPage/menuManage";
     }
 
-    //注销用户
-    @RequestMapping("/cancellation.action")
-    public String cancellation(){
-        session.removeAttribute("firstMenuList");//根据参数清除对应的值
-        session.invalidate();
-        adminName=null;
-        secondMenuList=null;
-        firstMenuList=null;
-        return "adminPage/login";
+    //    增加用户跳转
+    @RequestMapping("/userAddJump")
+    public String userAddJump(){
+        return "adminPage/huser_management_add";
+    }
+
+
+    //    增加用户
+    @RequestMapping("/userAdd")
+    @ResponseBody
+    public Map  userAdd(Admin admin){
+        if(admin.getPassword()==null){
+            addUserMap.put("success",false);
+            addUserMap.put("message","密码不能为空");
+            return addUserMap;
+        }else if(admin.getAdminRoleId()==0){
+            addUserMap.put("success",false);
+            addUserMap.put("message","角色不能为空");
+            return addUserMap;
+        }else if(adminServiceImpl.checkName(admin.getAdminName())!=null){
+            addUserMap.put("success",false);
+            addUserMap.put("message","用户已存在");
+            return addUserMap;
+        }
+        int result=adminServiceImpl.addUser(admin);
+        if(result>0){
+            addUserMap.put("success",true);
+            return addUserMap;
+        }else {
+            addUserMap.put("success",false);
+            addUserMap.put("message","添加失败");
+            return addUserMap;
+        }
+
+    }
+
+
+    @RequestMapping("/authorityManageJump")
+    public String authorityManageJump(){
+        return "adminPage/authorityManagement";
+    }
+
+    //角色列表
+    @RequestMapping("/authorityManage")
+    @ResponseBody
+    public Map  authorityManage(){
+        Map<String, Object> map = new HashMap<String, Object>();
+        List<Role> roleList=  adminServiceImpl.findaLLRole();
+        map.put("code", 0);
+        map.put("msg", "");
+        map.put("count", 1000);
+        map.put("data", roleList);
+        return map;
+
+    }
+
+
+
+
+    @RequestMapping("/roleAuthorityManageJump")
+    public String roleAuthorityManageJump(HttpServletRequest request){
+        int roleId=Integer.parseInt(request.getParameter("adminRoleId"));
+        request.setAttribute("adminRoleId",roleId);
+        return "forward:/WEB-INF/adminPage/roleauthorityManagement.jsp";
+    }
+    //角色权限配置
+    @RequestMapping("/roleAuthorityManage")
+    public void roleAuthorityManage(HttpServletRequest request,HttpServletResponse response) throws IOException {
+        response.setCharacterEncoding("UTF-8");
+        int roleId=Integer.parseInt(request.getParameter("adminRoleId"));
+        int pagesize = Integer.parseInt(request.getParameter("limit"));
+        int pageNum = Integer.parseInt(request.getParameter("page"));
+        firstMenuList= (ArrayList<FirstMenu>) adminServiceImpl .findAllFistMenu();
+        PageInfo pageSecond= adminServiceImpl .findAllSecondMenu(pageNum,pagesize);
+        secondMenuList= (ArrayList<SecondMenu>) pageSecond.getList();
+        List<SecondMenu>ownSecondList  = adminServiceImpl .findOwnSecondMenu(roleId);
+        Map<String, Object> map = new HashMap<String, Object>();
+        List<AllMenu>allMenus=new ArrayList<AllMenu>();
+        map.put("code", 0);
+        map.put("msg", "");
+        map.put("count",pageSecond.getTotal() );
+        for(FirstMenu firstMenu:firstMenuList){
+            for(SecondMenu secondMenu:secondMenuList) {
+                if (firstMenu.getPhamacyFirstId() == secondMenu.getPhamacyFirstId()) {
+                    AllMenu allMenu = new AllMenu();
+                    for (SecondMenu ownSecond : ownSecondList) {
+                        if (secondMenu.getPhamacySecondId() == ownSecond.getPhamacySecondId()) {
+                            allMenu.setLAY_CHECKED(true);
+                            System.out.println(allMenu.isLAY_CHECKED());
+                        }
+                    }
+                    allMenu.setPhamacyFirstName(firstMenu.getPhamacyFirstName());
+                    allMenu.setPhamacySecondId(secondMenu.getPhamacySecondId());
+                    allMenu.setPhamacySecondName(secondMenu.getPhamacySecondName());
+                    allMenus.add(allMenu);
+
+                }
+            }
+        }
+        map.put("data",allMenus);
+        String jsonStr=gson.toJson(map);
+        response.getWriter().write(jsonStr);
+
+    }
+
+    @RequestMapping("/addRoleAuthority")
+    @ResponseBody
+    public  Map checkboxManage( AllMenu allMenu){
+        Map<String,Object>checkBox =new HashMap<String,Object>();
+        if(allMenu.getState()==0) {
+            int result = adminServiceImpl.addRoleAuthority(allMenu.getPhamacySecondId(), allMenu.getRoleId());
+            if (result > 0) {
+                checkBox.put("success", true);
+                checkBox.put("message", "添加成功");
+                return checkBox;
+            } else {
+                checkBox.put("failure", false);
+                checkBox.put("message", "添加失败");
+                return checkBox;
+            }
+        }else if(allMenu.getState()==1){
+            int result = adminServiceImpl.addAllRoleAuthority(allMenu);
+            if (result > 0) {
+                checkBox.put("success", true);
+
+                return checkBox;
+            } else {
+                checkBox.put("failure", false);
+
+                return checkBox;
+            }
+        }else {
+            checkBox.put("failure", false);
+            checkBox.put("message", "添加失败");
+            return checkBox;
+        }
+    }
+
+    @RequestMapping("/delOneBoxManage")
+    @ResponseBody
+    public  Map delOneBoxManage(AllMenu allMenu){
+        Map<String,Object>checkBox =new HashMap<String,Object>();
+        int result=adminServiceImpl.delRoleAuthority(allMenu.getPhamacySecondId(),allMenu.getRoleId());
+        if(result>0){
+            checkBox.put("success",true);
+            checkBox.put("message","删除成功");
+            return checkBox;
+        }else{
+            checkBox.put("failure",false);
+            checkBox.put("message","删除失败");
+            return checkBox;
+        }
     }
 
     public Admin getAdmin() {
         return admin;
     }
+
     public void setAdmin(Admin admin) {
         this.admin = admin;
     }
