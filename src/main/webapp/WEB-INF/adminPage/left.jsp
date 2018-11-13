@@ -20,12 +20,6 @@
 <!-- 左边节点 -->
 <div class="container">
     <div class="leftsidebar_box">
-        <a href="main.jsp" target="main">
-            <div class="line">
-                <img class="icon1" src="../images/coin01.png" />
-                <img class="icon2" src="../images/coin02.png" />&nbsp;&nbsp;首页
-            </div>
-        </a>
 
         <!--用户管理-->
         <c:forEach items="${firstMenuList}"  var="firstMenu" >

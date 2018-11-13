@@ -16,7 +16,7 @@
 
     <!--查询所有用户-->
     <select id="find" resultType="com.cy.bean.Admin">
-		select * from admin_table
+		select * from admin_table order by adminid
     </select>
 
     <!--禁用状态-->
@@ -110,6 +110,11 @@
         delete from PHAMACYSE_ROLE_TABLE where PHAMACYSECONDID=#{secondMenuId} and ADMINROLEID=#{roleId}
     </delete>
 
+
+    <!--后台用户模糊搜索-->
+    <select id="LikeFind" resultType="com.cy.bean.Admin">
+		select * from admin_table  where adminname like '%'||#{adminname}||'%' order by adminid
+    </select>
 
 </mapper>
 	

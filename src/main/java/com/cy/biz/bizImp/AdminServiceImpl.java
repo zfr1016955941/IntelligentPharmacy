@@ -3,8 +3,11 @@ package com.cy.biz.bizImp;
 import com.cy.bean.*;
 import com.cy.biz.AdminService;
 import com.cy.mapper.AdminManage;
+import com.cy.util.StringUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -33,8 +36,18 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public ArrayList<?> find() {
-        return adminMapper.find();
+    public PageInfo<Admin> find(String page, int size) {
+        int page1=0;
+        if(StringUtils.isEmpty(page)){
+            page1 = Integer.parseInt(page="1");
+        }else{
+            page1 = Integer.parseInt(page);
+        }
+        //selectByUsers调用的是前面没分页的方法
+        PageHelper.startPage(page1,size);
+        ArrayList<Admin> AdminListPageInfo = adminMapper.find();
+        PageInfo<Admin> Admins = new PageInfo<Admin>(AdminListPageInfo);
+        return Admins;
     }
 
     @Override
@@ -125,6 +138,22 @@ public class AdminServiceImpl implements AdminService {
     }
 
 
+
+    @Override
+    public PageInfo<Admin> LikeFind(String name, String page, int size) {
+        int page1=0;
+        if(StringUtils.isEmpty(page)){
+            page1 = Integer.parseInt(page="1");
+        }else{
+            page1 = Integer.parseInt(page);
+        }
+        //selectByUsers调用的是前面没分页的方法
+        PageHelper.startPage(page1,size);
+        ArrayList<Admin> AdminListPageInfo = adminMapper.LikeFind(name);
+        PageInfo<Admin> Admins = new PageInfo<Admin>(AdminListPageInfo);
+        return Admins;
+
+    }
 
 
 }

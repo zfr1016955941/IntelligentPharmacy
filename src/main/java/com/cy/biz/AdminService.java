@@ -1,5 +1,8 @@
 package com.cy.biz;
 
+import com.cy.bean.Admin;
+import com.cy.bean.Purchase;
+import com.github.pagehelper.PageInfo;
 import com.cy.bean.*;
 import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
@@ -14,7 +17,7 @@ public interface AdminService {
 
 
     //查询所有用户
-    public abstract ArrayList<?> find();
+    public PageInfo<Admin> find(String page, int size);
 
     //启用用户
     public void stopState(String name);
@@ -48,6 +51,9 @@ public interface AdminService {
 
     //查询角色所用有的菜单
     public  List<SecondMenu> findOwnSecondMenu(int roleId);
+
+    //查询所有用户
+    public PageInfo<Admin> LikeFind(String name,String page, int size);
 
     //增加角色权限
     public int addRoleAuthority(int secondMenuId, int roleId);

@@ -81,7 +81,7 @@
                 <option value="0" style="display:none;" >-请选择-</option>
             </select>
                 <button class="layui-btn"  lay-submit="" lay-filter="*" onclick="firstMenuAdd('一级菜单添加','addFirstMenuView.action','4','','400')"><i class="layui-icon">&#xe608;</i>一级菜单添加</button><br/>
-                <button class="layui-btn"  lay-submit="" lay-filter="*" onclick="firstMenuEdit('一级菜单编辑','editFirstMenuView.action','4','510','510')"><span ><img src="../images/t02.png"  ></span>一级菜单编辑</button>
+                <button class="layui-btn"  lay-submit="" lay-filter="*" onclick="firstMenuDelete()"><span ><img src="../images/t02.png"  ></span>一级菜单删除</button>
             </div>
         <label class="layui-form-label" style="width: 100px">二级菜单：</label>
             <div class="layui-input-inline" style="width:100px">
@@ -121,6 +121,21 @@
     // 一级菜单添加
     function firstMenuAdd (title,url,id,w,h) {
         x_admin_show(title,url,w,h);
+    }
+
+    // 一级菜单删除
+    function firstMenuDelete() {
+        var t=confirm("确定要删除该一级菜单？");
+        var searchFirstMenu=document.getElementById("searchFirstMenu").value;
+        if(t==true){
+            location.href="firstMenuDelete.action?searchFirstMenu="+searchFirstMenu;
+            layer.msg('提交成功!',{icon: 6,time:2000});
+            layer.closeAll(layer.index);
+            window.parent.location.reload();
+        }else{
+            location.href="menuConfig.action";
+        }
+
     }
 
     // 二级菜单删除

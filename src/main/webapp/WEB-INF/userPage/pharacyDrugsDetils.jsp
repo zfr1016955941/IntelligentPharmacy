@@ -90,7 +90,7 @@
 <!-- xiangqing -->
 <form action="post" method="">
     <div class="jieshao mt20 w">
-        <div class="left fl"><img src="${pageContext.request.contextPath}/userPage/images.action?receiverId=${phamacyDrug.pharmacyId}" width="400" height="500"></div>
+        <div class="left fl"><img src="${pageContext.request.contextPath}/userPage/images.action?receiverId=${phamacyDrug.pharmacyId}"></div>
         <div class="right fr">
             <div class="h3 ml20 mt20">${phamacyDrug.drugName}</div>
             <div class="jianjie mr40 ml20 mt10">${phamacyDrug.drugDetails}</div>

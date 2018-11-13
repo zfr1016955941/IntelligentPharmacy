@@ -22,7 +22,7 @@ public interface AdminManage {
     public Admin login(Admin admin);
 
     //查询所有用户
-    public abstract ArrayList<?> find();
+    public  ArrayList<Admin> find();
 
     //启用用户
     public void stopState(String name);
@@ -44,6 +44,9 @@ public interface AdminManage {
 
     //由用户名查找角色ID
     public int selectRoleId(String name);
+
+    //后台用户模糊搜索
+    public  ArrayList<Admin> LikeFind(String name);
     //查询所有的角色
     public List<Role> findAllRole();
 

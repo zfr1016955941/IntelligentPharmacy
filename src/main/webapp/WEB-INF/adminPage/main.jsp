@@ -127,7 +127,7 @@
 
 </head>
 
-<body  background=" " onload="load()">
+<body  background="images/banner1.jpg " onload="load()">
 <div class="clearfix" id="contentBox">
 <input type="hidden" name="nameId" value="0">
     <c:when test="${not empty sessionScope.adminList}">

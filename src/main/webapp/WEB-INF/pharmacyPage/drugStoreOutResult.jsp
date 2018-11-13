@@ -39,7 +39,7 @@
             <th> 退还数量 </th>
             <th> 退还原因 </th>
             <th> 状态 </th>
-            <th lay-data="{event:'del'}"> 操作 </th>
+            <th > 操作 </th>
         </tr>
         </thead>
         <tbody>
@@ -81,7 +81,7 @@
                 </td>
             </tr>
         </c:forEach>
-            </c:when>
+         </c:when>
         </c:choose>
         <tr>
             <td colspan="3" align="left">共有${drugStoreOut.total}条记录，当前第${drugStoreOut.pageNum}页，共${drugStoreOut.pages}页</td>
